@@ -1,0 +1,2 @@
+(temp['fever']| temp['mp'])
+(temp['cld']|temp['asthma']|temp['cold']|temp['st']|temp['pneumonia'])
