@@ -1,7 +1,18 @@
 import tensorflow as tf
+from tensorflow import keras
+#from tensorflow.keras import layers
+#from keras import Sequential,Model
+#from keras.layers import concatenate,Activation, Dense, Dropout, Conv2D, Flatten, MaxPooling2D, GlobalMaxPooling2D, GlobalAveragePooling1D, AveragePooling2D, Input, Add, BatchNormalization
+#from keras.preprocessing.image import ImageDataGenerator
+#from keras.models import model_from_json
+#from sklearn.metrics import roc_curve
+#from keras.utils import np_utils
+#from tqdm import tqdm
+import pandas as pd
 import numpy as np
 import librosa 
 import librosa.display
+import pylab
 import cv2
 import json
 import os
@@ -9,7 +20,7 @@ import matplotlib.pyplot as plt
 import flask
 from keras.models import load_model
 
-from flask import request,render_template
+from flask import request, jsonify,render_template
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
@@ -161,15 +172,55 @@ diagnoses= []
 imgpaths = []
 
 
+#row='/home/sumukhmlohit/my_project_dir/virufy-covid/cough/Coswara-Data/20200413/vK2bLRNzllXNeyOMudnNSL5cfpG2/breathing-shallow.wav'
+#row='/home/sumukhmlohit/my_project_dir/virufy-covid/cough/Coswara-Data/20200820/TaoyZAahOzRoDQRxb0DtDZh8Opa2/cough-shallow.wav'
+
+
+
+#Provide inputs in the form of row ["Patient name","Audio file upload",Fever/Mild Pain,Respiratory Condition]
+# @app.route('/hello', methods=['GET','POST'])
+# def index():
+#     value = ""
+#     return render_template('project.html',value = value)
+
+def mfcc_predictor(row,model):
+    mfccs,savepath  = feature_extractor1(row)
+    features.append(mfccs)
+    imgpaths.append(savepath)
+    diagnoses.append([row[2],row[3]])
+
+    tfeaturesd = np.array([mfccs for i in range(48)])
+    timgsd = np.array([savepath for i in range(48)])
+    textrad = np.array([[row[2],row[3]] for i in range(48)])
+    labelsd = np.array([1 for i in range(48)])
+
+    custom = TripleInputGenerator(tfeaturesd,timgsd,textrad,labelsd,batch_size=48,target_size=(64,64))
+
+    y_score1=model.predict_generator(custom)
+    y_score1
+    x=y_score1>0.5
+    
+    return y_score1[0][0]
+
+
 @app.route('/', methods=['GET','POST'])
 def predict():
     value = ""
     if request.method == "GET":
         return render_template('project.html',value = value)
     if request.method == "POST":  
-        input1 = request.files["input1"]
+        input1 = request.files["breathing"]
         sym = request.form.getlist('symptoms')
 
+        input2 = request.files["cough"]
+        input3 = request.files["speech"]
+        fevermp=0
+        orc=0
+        if 'fever' in sym or  'mp' in sym:
+            fevermp=1
+        if 'cld' in sym or 'st' in sym or 'cold 'in sym or 'pneumonia'in sym or  'asthma' in sym:
+            orc=1
+        '''
         print(sym)
         fever = 0
         mp = 0
@@ -178,22 +229,30 @@ def predict():
         if "mp" in sym:
             mp = 1
         print(fever,mp)
-        
-        row=['RebRt0aSpjOeqnezG7i5XQn03Ql2',input1,fever,mp]
-        model = load_model('019--0.204--0.103.hdf5')
+        '''
+        row=['RebRt0aSpjOeqnezG7i5XQn03Ql2',input2,fevermp,orc]#cough
+        #a=request.form["name"]
+        #b=0
+        #c=request.form.get('fever') or request.form.get('mp')
+        #d=request.form.get('cld')or request.form.get('st')or request.form.get('pneumonia')or request.form.get('asthma')
+        #row=[a,b,c,d]
+        row2=['RebRt0aSpjOeqnezG7i5XQn03Ql2',input1,fevermp,orc]#breathing
+        row3=['RebRt0aSpjOeqnezG7i5XQn03Ql2',input3,fevermp,orc]#speech
 
+
+        model = load_model('019--0.204--0.103.hdf5')
+        model_count=load_model('020--0.136--0.042.hdf5')
+        model_breath=load_model('020--0.473--0.467.hdf5')
+        '''
         mfccs,savepath  = feature_extractor1(row)
         features.append(mfccs)
         imgpaths.append(savepath)
         diagnoses.append([row[2],row[3]])
-
         tfeaturesd = np.array([mfccs for i in range(48)])
         timgsd = np.array([savepath for i in range(48)])
         textrad = np.array([[row[2],row[3]] for i in range(48)])
         labelsd = np.array([1 for i in range(48)])
-
         custom = TripleInputGenerator(tfeaturesd,timgsd,textrad,labelsd,batch_size=48,target_size=(64,64))
-
         y_score1=model.predict_generator(custom)
         y_score1
         x=y_score1>0.5
@@ -201,11 +260,76 @@ def predict():
             status = "positive"
         else:
             status = "negative"
-            
+        '''
+        result_cough=mfcc_predictor(row,model)
+
+        if result_cough>=0.5:
+            status="positive"
+        else:
+            status="negative"
+
+        result_count=mfcc_predictor(row3,model_count)
+
+        if result_count>=0.5:
+            status="positive"
+        else:
+            status="negative"
+
         
-        covid = {'result':status,'value':str(y_score1[0][0]*100)}
+        result_breath=mfcc_predictor(row2,model_breath)
+
+        if result_breath>=0.5:
+            status="positive"
+        else:
+            status="negative"
+        
+        result=result_cough*0.84/2.75+result_count*0.96/2.75+result_breath*0.95/2.75
+
+        covid = {'result':status,'value':str(result*100)}
     return render_template('circle.html',covid = json.dumps(covid))
 
 app.run()
 
 
+'''
+#Provide inputs in the form of row ["Patient name","Audio file upload",Fever/Mild Pain,Respiratory Condition]
+@app.route('/', methods=['GET','POST'])
+def predict():
+  #row=['RebRt0aSpjOeqnezG7i5XQn03Ql2','/home/sumukhmlohit/my_project_dir/virufy-covid/cough/Coswara-Data/20210406/RebRt0aSpjOeqnezG7i5XQn03Ql2/cough-shallow.wav',0,0]
+  file=''
+  if request.method == 'POST':
+        file = request.files['cough']
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            b = 'file uploaded'
+  b=file
+  #a=request.form["name"]
+  a="mmm"
+  c=request.form.get('fever') or request.form.get('mp')
+  d=request.form.get('cld')or request.form.get('st')or request.form.get('pneumonia')or request.form.get('asthma')
+  row=[a,b,c,d]
+  model = load_model('/home/sumukhmlohit/my_project_dir/virufy-covid/cough/models/3/019--0.204--0.103.hdf5')
+  mfccs,savepath  = feature_extractor1(row)
+  features.append(mfccs)
+  imgpaths.append(savepath)
+  diagnoses.append([row[2],row[3]])
+  tfeaturesd = np.array([mfccs for i in range(48)])
+  timgsd = np.array([savepath for i in range(48)])
+  textrad = np.array([[row[2],row[3]] for i in range(48)])
+  labelsd = np.array([1 for i in range(48)])
+  custom = TripleInputGenerator(tfeaturesd,timgsd,textrad,labelsd,batch_size=48,target_size=(64,64))
+  y_score1=model.predict_generator(custom)
+  y_score1
+  x=y_score1>0.5
+  if x[0][0]==True:
+    status = "positive"
+  else:
+    status = "negative"
+      
+  value = {'status':status,'percentage':str(y_score1[0][0]*100)}
+  #return jsonify(value)
+  return render_template('project.html')
+if __name__ == "__main__":
+    app.run(debug=True)
+'''
