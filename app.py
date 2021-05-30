@@ -183,6 +183,25 @@ imgpaths = []
 #     value = ""
 #     return render_template('project.html',value = value)
 
+def mfcc_predictor(row,model):
+    mfccs,savepath  = feature_extractor1(row)
+    features.append(mfccs)
+    imgpaths.append(savepath)
+    diagnoses.append([row[2],row[3]])
+
+    tfeaturesd = np.array([mfccs for i in range(48)])
+    timgsd = np.array([savepath for i in range(48)])
+    textrad = np.array([[row[2],row[3]] for i in range(48)])
+    labelsd = np.array([1 for i in range(48)])
+
+    custom = TripleInputGenerator(tfeaturesd,timgsd,textrad,labelsd,batch_size=48,target_size=(64,64))
+
+    y_score1=model.predict_generator(custom)
+    y_score1
+    x=y_score1>0.5
+    
+    return y_score1[0][0]
+
 
 @app.route('/', methods=['GET','POST'])
 def predict():
@@ -193,6 +212,15 @@ def predict():
         input1 = request.files["input1"]
         sym = request.form.getlist('symptoms')
 
+        input2 = request.files["input2"]
+        input3 = request.files["input3"]
+        fevermp=0
+        orc=0
+        if 'fever' in sym or  'mp' in sym:
+            fevermp=1
+        if 'cld' in sym or 'st' in sym or 'cold 'in sym or 'pneumonia'in sym or  'asthma' in sym:
+            orc=1
+        '''
         print(sym)
         fever = 0
         mp = 0
@@ -201,16 +229,21 @@ def predict():
         if "mp" in sym:
             mp = 1
         print(fever,mp)
-        
-        row=['RebRt0aSpjOeqnezG7i5XQn03Ql2',input1,fever,mp]
+        '''
+        row=['RebRt0aSpjOeqnezG7i5XQn03Ql2',input2,fevermp,orc]#cough
         #a=request.form["name"]
         #b=0
         #c=request.form.get('fever') or request.form.get('mp')
         #d=request.form.get('cld')or request.form.get('st')or request.form.get('pneumonia')or request.form.get('asthma')
         #row=[a,b,c,d]
+        row2=['RebRt0aSpjOeqnezG7i5XQn03Ql2',input1,fevermp,orc]#breathing
+        row3=['RebRt0aSpjOeqnezG7i5XQn03Ql2',input3,fevermp,orc]#speech
+
 
         model = load_model('019--0.204--0.103.hdf5')
-
+        model_count=load_model('020--0.136--0.042.hdf5')
+        model_breath=load_model('020--0.473--0.467.hdf5')
+        '''
         mfccs,savepath  = feature_extractor1(row)
         features.append(mfccs)
         imgpaths.append(savepath)
@@ -230,8 +263,32 @@ def predict():
             status = "positive"
         else:
             status = "negative"
-            
-        covid = {'result':status,'value':str(y_score1[0][0]*100)}
+        '''
+        result_cough=mfcc_predictor(row,model)
+
+        if result_cough>=0.5:
+            status="positive"
+        else:
+            status="negative"
+
+        result_count=mfcc_predictor(row3,model_count)
+
+        if result_count>=0.5:
+            status="positive"
+        else:
+            status="negative"
+
+        
+        result_breath=mfcc_predictor(row2,model_breath)
+
+        if result_breath>=0.5:
+            status="positive"
+        else:
+            status="negative"
+        
+        result=result_cough*0.84/2.75+result_count*0.96/2.75+result_breath*0.95/2.75
+
+        covid = {'result':status,'value':str(result*100)}
     return render_template('circle.html',covid = json.dumps(covid))
 
 app.run()
