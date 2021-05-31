@@ -7,7 +7,7 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.83.1">
     <title>Heroes · Bootstrap v5.0</title>
-
+    <!-- <link href="{{ url_for('static', filename='/css/output.css') }}" rel="stylesheet"> -->
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/heroes/">
 
     
@@ -33,7 +33,7 @@
 
     
     <!-- Custom styles for this template -->
-    
+    <link href="{{ url_for('static', filename='/css/heroes.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='/css/output.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/project.css') }}">
     <style>
@@ -54,6 +54,7 @@
     </style>
   </head>
   <body>
+   
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
       <symbol id="bootstrap" viewBox="0 0 118 94">
         <title>Bootstrap</title>
@@ -151,7 +152,7 @@
                 margin-right: 10px; 
             }
             </style>
-    
+            
               <strong>Click on the tile to the right to know about us</strong>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
@@ -163,7 +164,7 @@
 
 
 
-    <script src="{{ url_for('static', filename='/js/circle.js') }}circle.js"></script>
+    /* <script src="{{ url_for('static', filename='/js/circle.js') }}circle.js"></script> */
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <main>
 
@@ -177,7 +178,7 @@
         <h1 class="display-5 fw-bold lh-1 mb-3">Test Results</h1>
         <hr>
        <h1 style="margin-bottom: 25px;" class="display-6">
-         Through the Analysis of the given inputs you have been tested :
+         Based on the preliminary analysis of the inputs provided the CoviSound result is :
         </h1>
         <div id="guldu" class="alert alert-dark" role="alert">
         <h1><b><text class="report"> Positive </text></b></h1>
@@ -215,6 +216,17 @@
       /* justify-content: center; */
       /* align-items: center; */
     }
+    .single-chart {
+  display: block;
+  /* margin: 50px auto; */
+  position: relative;
+  left: -200px;
+  top: 10px;
+  bottom: 385px;
+  max-width: 50%;
+  max-height: 300px;
+  width: 55%;
+}
   </style>
   </div>
   <!-- <img src="/covidposter.jpeg"  class="precautions">
@@ -224,6 +236,8 @@
       height: 600px;
     }
   </style> -->
+
+  
 </main>
 
     <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js') }}"></script>

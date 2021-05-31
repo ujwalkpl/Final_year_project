@@ -266,28 +266,16 @@ def predict():
         '''
         result_cough=mfcc_predictor(row,model)
 
-        if result_cough>=0.5:
-            status="Positive"
-        else:
-            status="Negative"
-
         result_count=mfcc_predictor(row3,model_count)
-
-        if result_count>=0.5:
-            status="Positive"
-        else:
-            status="Negative"
-
-        
         result_breath=mfcc_predictor(row2,model_breath)
 
-        if result_breath>=0.5:
+     
+        
+        result=result_cough*0.84/2.75+result_count*0.96/2.75+result_breath*0.95/2.75
+        if result>=0.5:
             status="Positive"
         else:
             status="Negative"
-        
-        result=result_cough*0.84/2.75+result_count*0.96/2.75+result_breath*0.95/2.75
-
         covid = {'result':status,'value':str(result*100)}
     return render_template('index.html',covid = json.dumps(covid))
 

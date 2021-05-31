@@ -3,21 +3,12 @@
     flex-flow: row nowrap;
   }
   
-.single-chart {
+/* .single-chart {
     width: 45%;
     justify-content: space-around;
-  }
+  } */
   
-.circular-chart {
-    display: block;
-    /* margin: 50px auto; */
-    position: relative;
-    left: 700px;
-    /* top: 10px; */
-    bottom: 385px;
-    max-width: 50%;
-    max-height: 300px;
-  }
+  
   
 .circle-bg {
     fill: none;
