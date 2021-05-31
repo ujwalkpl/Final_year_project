@@ -221,7 +221,7 @@ def predict():
         orc=0
         if 'fever' in sym or  'mp' in sym:
             fevermp=1
-        if 'cld' in sym or 'st' in sym or 'cold 'in sym or 'pneumonia'in sym or  'asthma' in sym:
+        if 'cld' in sym or 'st' in sym or 'cold' in sym or 'pneumonia'in sym or  'asthma' in sym:
             orc=1
         '''
         print(sym)
