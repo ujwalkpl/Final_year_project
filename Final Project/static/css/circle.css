@@ -1,0 +1,59 @@
+.flex-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.single-chart {
+  width: 45%;
+  justify-content: space-around;
+}
+
+.circular-chart {
+  display: block;
+  /* margin: 50px auto; */
+  position: relative;
+  left: 1050px;
+  /* top: 10px; */
+  bottom: 385px;
+  max-width: 50%;
+  max-height: 300px;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: rgb(46, 170, 46);
+  stroke-width: 4;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: butt;
+  animation: progress 1s ease-out forwards;
+}
+
+@keyframes progress {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}
+
+.circular-chart.red .circle {
+  stroke: red;
+}
+
+.circular-chart.blue .circle {
+  stroke: #3c9ee5;
+}
+
+.circular-chart.orange .circle {
+  stroke: orange;
+}
+
+.percentage {
+  fill: black;
+  /* font-family: sans-serif; */
+  font-family: Arial, Helvetica, sans-serif, "Lucida Sans", Arial, sans-serif;
+  font-size: 0.5em;
+  text-anchor: middle;
+}

@@ -33,8 +33,8 @@
 
     
     <!-- Custom styles for this template -->
-    
-    <link href="{{ url_for('static', filename='/css/output.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='/css/heroes.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='/css/circle.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/project.css') }}">
     <style>
       .bd-placeholder-img {
@@ -202,7 +202,7 @@
             a 15.9155 15.9155 0 0 1 0 31.831
             a 15.9155 15.9155 0 0 1 0 -31.831"
         />
-        <text style="font-size:6px" x="18" y="20.35" class="percentage">50%</text>
+        <text x="18" y="20.35" class="percentage">50%</text>
       </svg>
     </div>
     <img src="{{ url_for('static', filename='/images/cov.jpg') }}"  class="precautions">
@@ -227,27 +227,7 @@
 </main>
 
     <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js') }}"></script>
-    <script>
-      var coo = {{ covid | safe }};
-      console.log(coo)
-      var percent = coo.value.toString()+", 100";
-      var answer = coo.result
-      console.log(percent,answer)
-      document.getElementsByClassName('circle')[0].setAttribute("stroke-dasharray", percent);
-      var num = parseFloat(coo.value)
-      let myclass = document.querySelector('.percentage')
-      myclass.textContent=num.toFixed(2).toString()+"%";
-      if(answer == "Positive"){
-      $("#guldu").removeClass('alert alert-dark').addClass('alert alert-danger');
-      }
-      if(answer == "Negative"){
-      $("#guldu").removeClass('alert alert-dark').addClass('alert alert-success');
-    }
-      console.log(percent);
-      let newclass = document.querySelector('.report')
-    newclass.textContent=answer;
-   
-    </script>
+
       
   </body>
   <footer id="myfooter" class="page-footer font-small stylish-color-dark pt-4">

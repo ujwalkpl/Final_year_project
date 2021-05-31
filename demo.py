@@ -202,7 +202,10 @@ def mfcc_predictor(row,model):
     
     return y_score1[0][0]
 
-
+@app.route('/predict')
+def demo():
+    covid = {'result':"Negative",'value':"30"}
+    return render_template('index.html',covid = json.dumps(covid))
 @app.route('/', methods=['GET','POST'])
 def predict():
     value = ""
@@ -264,29 +267,29 @@ def predict():
         result_cough=mfcc_predictor(row,model)
 
         if result_cough>=0.5:
-            status="positive"
+            status="Positive"
         else:
-            status="negative"
+            status="Negative"
 
         result_count=mfcc_predictor(row3,model_count)
 
         if result_count>=0.5:
-            status="positive"
+            status="Positive"
         else:
-            status="negative"
+            status="Negative"
 
         
         result_breath=mfcc_predictor(row2,model_breath)
 
         if result_breath>=0.5:
-            status="positive"
+            status="Positive"
         else:
-            status="negative"
+            status="Negative"
         
         result=result_cough*0.84/2.75+result_count*0.96/2.75+result_breath*0.95/2.75
 
         covid = {'result':status,'value':str(result*100)}
-    return render_template('circle.html',covid = json.dumps(covid))
+    return render_template('index.html',covid = json.dumps(covid))
 
 app.run()
 
