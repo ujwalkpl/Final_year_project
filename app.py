@@ -287,7 +287,7 @@ def predict():
             status="negative"
         
         result=result_cough*0.84/2.75+result_count*0.96/2.75+result_breath*0.95/2.75
-
+        #result=result_breath
         covid = {'result':status,'value':str(result*100)}
     return render_template('circle.html',covid = json.dumps(covid))
 
