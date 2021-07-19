@@ -181,7 +181,9 @@
 <form method="POST" enctype="multipart/form-data">
  {{value}}
   <div class="container px-4 py-3" id="featured-3">
-    <h2 class="pb-2 border-bottom">Model Inputs - Please give custom inputs</h2>
+    <h2 class="pb-2 border-bottom">Audio Inputs</h2>
+    
+    <h5 style="padding-bottom: 10px;" >Please make sure you are in a quiet enviroment and maintain a distance of 20cm from the recording device for best results</h5>
     <div class="row g-4 py-2 row-cols-1 row-cols-lg-3">
       <div class="feature col">
          <div class="feature-icon bg-primary bg-gradient"> 
@@ -199,7 +201,7 @@
 
         </div>
         <h2>Breathing Sound Input</h2>
-        <p>One of our first input features taken into consideration for our model is Breathing sound of the person who is being tested. Please insert the audio file.</p>
+        <p>Breathe Fast five times</p>
         
         <!-- Taking audio files -->
         <input type="file" id="input1" name="breathing" value="input1"/ required>
@@ -234,10 +236,10 @@
         </style>
         </div>
         <h2>Cough Sound Input</h2>
-        <p> Next, we take cough sounds of the same person. Please insert a 10-15 seconds audio file for the analysis to be thorough.<br><br></p>
+        <p> Cough mildly three times<br></p>
        
 <!-- Taking audio files -->
-<input type="file" id="input2" name="cough"/ >
+<input type="file" id="input2" name="cough"/required >
 <audio id="sound2" preload="none"></audio>
 </audio>
 <script type="text/javascript">
@@ -269,10 +271,10 @@ input2.onchange = function(){
         </style>
         </div>
         <h2>Normal Speech Input</h2>
-        <p>We also take the input of the user's normal speech where he/she will be counting from 1-20. The results obtained by this can also be taken as a major feature in our model.</p>
+        <p>Count fast from one to twenty</p>
         
         <!-- Taking audio files -->
-<input type="file" id="input3" name="speech" />
+<input type="file" id="input3" name="speech" /required>
 <audio id="sound3" preload="none"></audio>
 </audio>
 <script type="text/javascript">
@@ -292,7 +294,7 @@ input3.onchange = function(){
 </div>
 </div>
 <div style="margin-top: 35px; margin-left: 120px;" class="parameters">
-    <h2 style="margin-bottom: 25px;" class="pb-2 border-bottom">Required Parameters</h2>
+    <h2 style="margin-bottom: 25px;" class="pb-2 border-bottom">Symptoms</h2>
   <!-- <div class="fever"> -->
     <input style="margin-left: 10px;" type="checkbox" name="symptoms" id="fever" value="fever">
   <label style="margin-top: 5px;margin-right: 50px;" for="fever">Fever</label>  
@@ -303,10 +305,6 @@ input3.onchange = function(){
   <label style="margin-top: 5px;margin-right: 50px;" for="mp">Muscle pain</label>   
 <!-- </div> -->
 
-<!-- <div class="cld" > -->
-  <input type="checkbox" name="symptoms" id="cld" value="cld">
-  <label style="margin-top: 5px;margin-right: 50px;" for="cld">Chronic Lung disease</label>
-<!-- </div> -->
 
 <!-- <div class="cold" > -->
   <input type="checkbox" name="symptoms" id="cold" value="cold">
@@ -326,6 +324,12 @@ input3.onchange = function(){
 <!-- <div class="asthma" > -->
   <input type="checkbox" name="symptoms" id="asthma" value="Asthma">
   <label style="margin-top: 5px;margin-right: 50px;" for="asthma">Asthma</label>
+<!-- </div> -->
+
+
+<!-- <div class="cld" > -->
+  <input type="checkbox" name="symptoms" id="cld" value="cld">
+  <label style="margin-top: 5px;margin-right: 50px;" for="cld">Any other Chronic Lung disease</label>
 <!-- </div> -->
 <button type="submit" id="submitting" value="submit">Submit</button>
 
