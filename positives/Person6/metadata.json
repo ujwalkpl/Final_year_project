@@ -1,0 +1,17 @@
+{
+    "a": 23,
+    "bd": true,
+    "cold": true,
+    "cough": true,
+    "covid_status": "positive_mild",
+    "dT": "web",
+    "ep": "y",
+    "fV": 2,
+    "fever": true,
+    "g": "male",
+    "l_c": "India",
+    "l_l": "Jaipur",
+    "l_s": "Rajasthan",
+    "rU": "n",
+    "um": "n"
+}

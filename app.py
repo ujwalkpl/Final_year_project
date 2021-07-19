@@ -320,10 +320,11 @@ def mfcc_predictor(row_f,model):
     
     return y_score1[0][0]
 
-@app.route('/predict')
-def demo():
-    covid = {'result':"Negative",'value':"30"}
-    return render_template('index.html',covid = json.dumps(covid))
+# @app.route('/predict')
+# def demo():
+#     covid = {'result':"Negative",'value':"30"}
+#     return render_template('index.html',covid = json.dumps(covid))
+
 @app.route('/', methods=['GET','POST'])
 def predict():
     value = ""
